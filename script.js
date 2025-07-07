@@ -1,63 +1,90 @@
 //your code here
 
-
-let arr = ["div1", "div2", "div3", "div4", "div5", "div6"]
-
-let dives = document.querySelectorAll(".image")
+let imgArr = ["div1", "div2", "div3", "div4", "div5", "div6"]
 
 
-console.log(dives);
+let div = document.getElementsByClassName("image")
 
-let count = 0
+console.log(div);
 
-dives.forEach((element) => {
-    element.id = arr[count++]
-    element.addEventListener("dragstart", startEvent)
-    element.addEventListener("dragend", endEvent)
+function shuffleImg(arr) {
 
-})
+    for (let i = 0; i <= arr.length - 1; i++) {
+        let rindex = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[rindex]] = [arr[rindex], arr[i]]
 
-// dragstart and dragend
-
-function startEvent(e) {
-    console.log("dragStart");
-    e.target.style.opacity = "0.5"
-
-    e.dataTransfer.setData("text/plain", e.target.id)
-
-}
-
-
-function endEvent(e) {
-    console.log("dragend");
-    e.target.style.opacity = "1"
-}
-
-
-// dragover dragenter,drop
-
-
-let newEventArr = ["dragover", "dragenter", "drop"]
-
-
-newEventArr.forEach((element) => {
-
-    for (let t of dives) {
-        t.addEventListener(element, (e) => {
-            e.preventDefault()
-            if (element == "drop") {
-                let dropElement = e.target
-                let text = dropElement.innerText
-                let dropElementId = e.target.id
-                let selectedId = e.dataTransfer.getData("text")
-                let selectedImg = document.getElementById(selectedId)
-                let txt2 = selectedImg.innerText
-
-                dropElement.id = selectedId
-                dropElement.innerText= txt2
-                selectedImg.id = dropElementId
-selectedImg.innerText= text
-            }
-        })
     }
-})
+
+
+    return arr
+
+}
+
+
+window.onload = () => {
+
+    let shuffle = shuffleImg(div)
+
+for(let i=0;i<=shuffle.length-1;i++){
+
+    shuffle[i].id = imgArr[i]
+}
+
+    
+    // dragstart and dragend end
+
+    for(let t of shuffle){
+
+        t.addEventListener("dragstart", (e) => {
+    
+    
+            console.log("start");
+            e.target.style.opacity = "0.5"
+            e.dataTransfer.setData("text", e.target.id)
+        })
+        t.addEventListener("dragend", dragendEvent)
+    }
+    
+    function dragendEvent(e) {
+        console.log("end");
+        e.target.style.opacity = "1"
+    }
+
+
+    // 3 main event dragover dragenter drop
+
+    let eventArr = ["dragover", "dragenter", "drop"]
+
+
+
+    eventArr.forEach((events) => {
+
+        for (let t of div) {
+            t.addEventListener(events, (e) => {
+                e.preventDefault()
+
+                if (e.type == "drop") {
+                    let get = e.dataTransfer.getData("text")
+                    let div1 = document.getElementById(get)
+
+                    let text1 = div1.innerHTML
+                    let text2 = t.innerHTML
+                    let div2 = t.id
+
+                    t.id = div1.id
+                    t.innerHTML = text1
+                    div1.id = div2
+                    div1.innerHTML = text2
+
+
+
+                }
+            })
+        }
+    })
+
+
+
+}
+
+
